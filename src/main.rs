@@ -1,9 +1,13 @@
 use clap::{Parser, Subcommand};
-use drivel::SchemaState;
+
+#[cfg(not(target_env = "msvc"))]
 use jemallocator::Jemalloc;
 
+#[cfg(not(target_env = "msvc"))]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
+
+use drivel::SchemaState;
 
 #[derive(Subcommand, Debug)]
 enum Mode {
