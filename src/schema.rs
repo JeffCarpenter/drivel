@@ -393,7 +393,8 @@ impl Display for StringType {
 /// - `Integer` maps to JSON Schema `type: "integer"`
 /// - `Float` maps to JSON Schema `type: "number"`
 ///
-/// Both types include `minimum` and `maximum` constraints derived from sample data.
+/// Both variants track the range of observed values, but the generated JSON
+/// Schema only contains the `"type"` property.
 ///
 /// # Examples
 ///
@@ -415,7 +416,7 @@ impl Display for StringType {
 /// ```
 #[derive(PartialEq, Debug)]
 pub enum NumberType {
-    /// Integer numbers with minimum and maximum value constraints.
+    /// Integer numbers with tracked range bounds.
     ///
     /// This variant represents whole numbers (positive, negative, or zero)
     /// with range bounds derived from the observed sample data.
@@ -430,8 +431,8 @@ pub enum NumberType {
     ///
     /// Generates a JSON Schema with:
     /// - `type: "integer"`
-    /// - `minimum: <min_value>`
-    /// - `maximum: <max_value>`
+    ///
+    /// The stored `min` and `max` are not emitted.
     ///
     /// # Range Behavior
     ///
@@ -439,7 +440,7 @@ pub enum NumberType {
     /// This effectively creates a constant value constraint.
     Integer { min: i64, max: i64 },
 
-    /// Floating-point numbers with minimum and maximum value constraints.
+    /// Floating-point numbers with tracked range bounds.
     ///
     /// This variant represents decimal numbers with range bounds derived
     /// from the observed sample data. If any value in the sample contains
@@ -454,8 +455,8 @@ pub enum NumberType {
     ///
     /// Generates a JSON Schema with:
     /// - `type: "number"`
-    /// - `minimum: <min_value>`
-    /// - `maximum: <max_value>`
+    ///
+    /// The stored `min` and `max` are not emitted.
     ///
     /// # Range Behavior
     ///
