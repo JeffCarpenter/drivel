@@ -462,9 +462,18 @@ fn parse_array_type(schema_obj: &Map<String, Value>) -> Result<SchemaState, Pars
 fn parse_array_constraints(
     schema_obj: &Map<String, Value>,
 ) -> Result<(usize, usize), ParseSchemaError> {
-    let min_items = parse_optional_usize_field(schema_obj, "minItems")?.unwrap_or(0);
-    let max_items =
-        parse_optional_usize_field(schema_obj, "maxItems")?.unwrap_or(/* sane default */ 16);
+    let min_items_opt = parse_optional_usize_field(schema_obj, "minItems")?;
+    let max_items_opt = parse_optional_usize_field(schema_obj, "maxItems")?;
+
+    validate_min_max_constraint(
+        min_items_opt,
+        max_items_opt,
+        "minItems cannot be greater than maxItems",
+    )?;
+
+    let min_items = min_items_opt.unwrap_or(0);
+    let max_items = max_items_opt.unwrap_or(/* sane default */ 16);
+
     Ok((min_items, max_items))
 }
 
@@ -1278,6 +1287,23 @@ mod tests {
             assert!(result.is_err());
             if let Err(err) = result {
                 assert!(err.to_string().contains("enum array cannot be empty"));
+            }
+        }
+
+        #[test]
+        fn array_with_invalid_constraints() {
+            let schema = json!({
+                "type": "array",
+                "items": {"type": "integer"},
+                "minItems": 5,
+                "maxItems": 2
+            });
+            let result = parse_json_schema(&schema);
+            assert!(result.is_err());
+            if let Err(err) = result {
+                assert!(err
+                    .to_string()
+                    .contains("minItems cannot be greater than maxItems"));
             }
         }
     }
