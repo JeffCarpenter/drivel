@@ -1,13 +1,13 @@
 # drivel
 
-`drivel` is a command-line tool written in Rust for inferring a schema from an example JSON (or JSON lines) file, outputting it in human-readable or JSON Schema format, and generating synthetic data (the drivel in question) based on the inferred schema.
+`drivel` is a command-line tool written in Rust for inferring a schema from an example JSON or YAML (or JSON lines) file, outputting it in human-readable or JSON Schema format, and generating synthetic data (the drivel in question) based on the inferred schema.
 
 ## Features
 
-- **Schema Inference**: drivel can analyze JSON input and infer its schema, including data types, array lengths, and object structures.
+- **Schema Inference**: drivel can analyze JSON or YAML input and infer its schema, including data types, array lengths, and object structures.
 - **JSON Schema Output**: Export inferred schemas in standard JSON Schema format (draft 2020-12) for integration with other tools and validation workflows.
 - **Data Generation**: Based on the inferred schema, drivel can generate synthetic data that adheres to the inferred structure.
-- **Easy to integrate**: drivel reads JSON input from stdin and writes its output to stdout, allowing for easy integration into pipelines and workflows.
+- **Easy to integrate**: drivel reads JSON or YAML input from stdin and writes its output to stdout, allowing for easy integration into pipelines and workflows.
 
 ## Installation
 
@@ -28,7 +28,7 @@ cargo add drivel
 ## Usage
 
 ```
-Infer a schema from JSON input, and generate synthetic data based on the inferred schema.
+Infer a schema from JSON or YAML input, and generate synthetic data based on the inferred schema.
 
 Usage: drivel [OPTIONS] <COMMAND>
 
@@ -47,7 +47,7 @@ Options:
 
 ## Examples
 
-Consider a JSON file `input.json`:
+Consider a JSON (or YAML) file `input.json`:
 
 ```json
 {
