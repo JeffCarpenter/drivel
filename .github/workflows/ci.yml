@@ -7,10 +7,13 @@ env:
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build
+      run: cargo build --bins
     - name: Run tests
       run: cargo test
