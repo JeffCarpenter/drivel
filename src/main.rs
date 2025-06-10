@@ -1,5 +1,7 @@
 use clap::{Parser, Subcommand};
 use drivel::{SchemaState, ToJsonSchema};
+use serde_json::Value;
+use serde_yaml2;
 use jemallocator::Jemalloc;
 
 #[global_allocator]
@@ -59,6 +61,19 @@ impl From<&Args> for Option<drivel::EnumInference> {
     }
 }
 
+fn parse_json_or_yaml(s: &str) -> Result<Value, String> {
+    match serde_json::from_str(s) {
+        Ok(v) => Ok(v),
+        Err(json_err) => match serde_yaml2::from_str::<serde_yaml2::wrapper::YamlNodeWrapper>(s) {
+            Ok(node) => serde_json::to_value(&node).map_err(|e| e.to_string()),
+            Err(yaml_err) => Err(format!(
+                "JSON error: {}. YAML error: {}",
+                json_err, yaml_err
+            )),
+        },
+    }
+}
+
 fn main() {
     let args = Args::parse();
     let input = match std::io::read_to_string(std::io::stdin()) {
@@ -70,11 +85,11 @@ fn main() {
     };
 
     let schema = if args.from_schema {
-        // Parse input as JSON Schema
-        let json = match serde_json::from_str(&input) {
+        // Parse input as JSON Schema (JSON or YAML)
+        let json = match parse_json_or_yaml(&input) {
             Ok(json) => json,
             Err(err) => {
-                eprintln!("Error parsing input as JSON Schema: {}", err);
+                eprintln!("Error parsing input as JSON or YAML Schema: {}", err);
                 std::process::exit(1);
             }
         };
@@ -92,17 +107,17 @@ fn main() {
             enum_inference: (&args).into(),
         };
 
-        if let Ok(json) = serde_json::from_str(&input) {
+        if let Ok(json) = parse_json_or_yaml(&input) {
             drivel::infer_schema(json, &opts)
         } else {
-            // unable to parse input as JSON; try JSON lines format as fallback
+            // unable to parse input as single document; try line-based format
             let values = input
                 .lines()
-                .map(|line| match serde_json::from_str(line) {
+                .map(|line| match parse_json_or_yaml(line) {
                     Ok(v) => v,
                     Err(err) => {
                         eprintln!(
-                            "Error parsing input; are you sure it is valid JSON? Error: {}",
+                            "Error parsing input; are you sure it is valid JSON or YAML? Error: {}",
                             err
                         );
                         std::process::exit(1);
