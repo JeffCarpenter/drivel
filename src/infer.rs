@@ -959,12 +959,12 @@ mod tests {
                 "foo": "bar",
             }
         ]);
-        let enun_opts = EnumInference {
+        let enum_opts = EnumInference {
             max_unique_ratio: 0.5,
             min_sample_size: 2,
         };
         let options = InferenceOptions {
-            enum_inference: Some(enun_opts),
+            enum_inference: Some(enum_opts),
         };
         let schema = infer_schema(input, &options);
 
