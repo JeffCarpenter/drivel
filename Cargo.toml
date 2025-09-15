@@ -13,7 +13,6 @@ repository = "https://github.com/hgrsd/drivel"
 chrono = { version = "0.4.38", default-features = false, features = ["alloc"] }
 clap = { version = "4.5.7", features = ["derive"] }
 fake = { version = "2.9.2", features = ["chrono"] }
-jemallocator = "0.5.4"
 lazy_static = "1.4.0"
 rand = "0.8.5"
 rayon = "1.10.0"

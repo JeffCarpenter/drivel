@@ -2,10 +2,6 @@ use clap::{Parser, Subcommand};
 use drivel::{SchemaState, ToJsonSchema};
 use serde_json::Value;
 use serde_yaml2;
-use jemallocator::Jemalloc;
-
-#[global_allocator]
-static GLOBAL: Jemalloc = Jemalloc;
 
 #[derive(Subcommand, Debug)]
 enum Mode {
