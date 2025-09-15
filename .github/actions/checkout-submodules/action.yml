@@ -1,0 +1,9 @@
+name: Checkout with submodules
+description: Checkout repository including submodules and full history
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v5
+      with:
+        submodules: recursive
+        fetch-depth: 0
