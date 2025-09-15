@@ -1,0 +1,20 @@
+name: Checkout
+description: Checkout repository including optional submodules and configurable history
+
+inputs:
+  submodules:
+    description: "Submodules configuration passed to actions/checkout"
+    required: false
+    default: "recursive"
+  fetch-depth:
+    description: "Fetch history depth (0 indicates full history)"
+    required: false
+    default: "0"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v5.0.0
+      with:
+        submodules: ${{ inputs.submodules }}
+        fetch-depth: ${{ inputs["fetch-depth"] }}
