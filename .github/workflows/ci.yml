@@ -9,7 +9,14 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - id: checkout
+      uses: ./.github/actions/checkout-submodules
+      with:
+        fetch-depth: 0
+        submodules: false
+        ref: ${{ github.sha }}
+    - name: Print commit SHA
+      run: echo "Checked out ${{ steps.checkout.outputs.sha }}"
     - name: Build
       run: cargo build
     - name: Run tests

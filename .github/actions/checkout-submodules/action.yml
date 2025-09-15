@@ -1,0 +1,46 @@
+name: Checkout
+description: Checkout repository including optional submodules and configurable history
+
+inputs:
+  submodules:
+    description: "Submodules configuration passed to actions/checkout"
+    required: false
+    default: "recursive"
+  fetch-depth:
+    description: "Fetch history depth (0 indicates full history)"
+    required: false
+    default: "0"
+  ref:
+    description: "Branch, tag, or commit SHA to checkout"
+    required: false
+    default: ""
+  persist-credentials:
+    description: "Whether to persist the authentication credentials configured by checkout"
+    required: false
+    default: "true"
+  lfs:
+    description: "Download Git-LFS files"
+    required: false
+    default: "false"
+  ssh-key:
+    description: "SSH key for cloning private repositories or submodules"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - id: checkout
+      uses: actions/checkout@v5.0.0
+      with:
+        submodules: ${{ inputs.submodules }}
+        fetch-depth: ${{ inputs["fetch-depth"] }}
+        ref: ${{ inputs.ref }}
+        persist-credentials: ${{ fromJSON(inputs["persist-credentials"]) }}
+        lfs: ${{ fromJSON(inputs.lfs) }}
+        ssh-key: ${{ inputs["ssh-key"] }}
+
+outputs:
+  sha:
+    description: "Checked-out commit SHA"
+    value: ${{ steps.checkout.outputs.sha }}
