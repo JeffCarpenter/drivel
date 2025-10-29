@@ -56,6 +56,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: ./.github/actions/checkout-submodules
+        with:
+          fetch-depth: 1
       - name: Install cargo-dist
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
@@ -107,6 +109,8 @@ jobs:
         run: |
           git config --global core.longpaths true
       - uses: ./.github/actions/checkout-submodules
+        with:
+          fetch-depth: 1
       - uses: swatinem/rust-cache@v2
         with:
           key: ${{ join(matrix.targets, '-') }}
@@ -160,6 +164,8 @@ jobs:
       BUILD_MANIFEST_NAME: target/distrib/global-dist-manifest.json
     steps:
       - uses: ./.github/actions/checkout-submodules
+        with:
+          fetch-depth: 1
       - name: Install cargo-dist
         shell: bash
         run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.16.0/cargo-dist-installer.sh | sh"
@@ -204,6 +210,8 @@ jobs:
       val: ${{ steps.host.outputs.manifest }}
     steps:
       - uses: ./.github/actions/checkout-submodules
+        with:
+          fetch-depth: 1
       - name: Install cargo-dist
         run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.16.0/cargo-dist-installer.sh | sh"
       # Fetch artifacts from scratch-storage
@@ -242,6 +250,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: ./.github/actions/checkout-submodules
+        with:
+          fetch-depth: 1
       - name: "Download GitHub Artifacts"
         uses: actions/download-artifact@v4
         with:

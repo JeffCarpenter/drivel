@@ -10,6 +10,10 @@ inputs:
     description: "Fetch history depth (0 indicates full history)"
     required: false
     default: "0"
+  ref:
+    description: "Branch, tag, or commit SHA to checkout"
+    required: false
+    default: ""
   persist-credentials:
     description: "Whether to persist the authentication credentials configured by checkout"
     required: false
@@ -31,8 +35,9 @@ runs:
       with:
         submodules: ${{ inputs.submodules }}
         fetch-depth: ${{ inputs["fetch-depth"] }}
-        persist-credentials: ${{ inputs["persist-credentials"] }}
-        lfs: ${{ inputs.lfs }}
+        ref: ${{ inputs.ref }}
+        persist-credentials: ${{ fromJSON(inputs["persist-credentials"]) }}
+        lfs: ${{ fromJSON(inputs.lfs) }}
         ssh-key: ${{ inputs["ssh-key"] }}
 
 outputs:
