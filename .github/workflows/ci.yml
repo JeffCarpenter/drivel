@@ -14,8 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-    - uses: Swatinem/rust-cache@v2
+      with:
+        fetch-depth: 0
+    - uses: swatinem/rust-cache@7939da402645ba29a2df566723491a2c856e8f8a
+      with:
+        shared-key: drivel-${{ runner.os }}
     - name: Build
       run: cargo build
     - name: Run tests
       run: cargo test
+    - name: Memory usage smoke test
+      run: |
+        /usr/bin/time -f "max_rss_kb=%M" cargo run --quiet -- --help
