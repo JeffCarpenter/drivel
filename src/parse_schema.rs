@@ -28,6 +28,8 @@ impl fmt::Display for ParseSchemaError {
 
 impl std::error::Error for ParseSchemaError {}
 
+const DEFAULT_MAX_ITEMS: usize = 16;
+
 pub fn parse_json_schema(schema_json: &Value) -> Result<SchemaState, ParseSchemaError> {
     let schema_obj = schema_json
         .as_object()
@@ -472,7 +474,7 @@ fn parse_array_constraints(
     )?;
 
     let min_items = min_items_opt.unwrap_or(0);
-    let max_items = max_items_opt.unwrap_or(/* sane default */ 16);
+    let max_items = max_items_opt.unwrap_or(DEFAULT_MAX_ITEMS);
 
     Ok((min_items, max_items))
 }
