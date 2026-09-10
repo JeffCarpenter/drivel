@@ -2,8 +2,11 @@ use clap::{Parser, Subcommand};
 use drivel::{SchemaState, ToJsonSchema};
 use serde_json::Value;
 use serde_yaml2;
+
+#[cfg(not(windows))]
 use jemallocator::Jemalloc;
 
+#[cfg(not(windows))]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
